@@ -8,7 +8,6 @@ import {
   stop,
   draggerTriggerBounds,
 } from './utils/domFns'
-// import { ControlPosition, DraggableData, EventHandler } from './utils/typs'
 import { BOUNDS_MOVE_CELL } from './utils/constant'
 
 const MOUSE_EVT = {

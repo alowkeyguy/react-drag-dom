@@ -1,6 +1,5 @@
 
 import browserPrefix, { browserPrefixToKey } from './getPrefix'
-// import { ControlPosition, Bounds, DraggableData } from './typs'
 import * as ReactDOM from 'react-dom'
 
 

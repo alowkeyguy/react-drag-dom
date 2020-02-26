@@ -23,11 +23,6 @@ const mouse = {
   stop: 'mouseup',
 }
 
-interface IRef extends React.RefObject<HTMLDivElement> {
-  offsetParent: HTMLElement
-  ownerDocument: HTMLElement
-}
-
 interface IProps {
   children?: React.ReactNode
   offsetParent?: HTMLElement
@@ -125,12 +120,13 @@ export default class DragFrame extends React.Component<IProps, IState> {
   }
   drawStart: EventHandler<MouseEvent> = (e) => {
     const { startP, endP } = this.state
-    const ref = this.ref.current as IRef
+    const ref = this.ref.current
     const offsetP = this.getOffsetParent(ref.offsetParent)
     /** 保证用户在移动元素的时候不会选择到元素内部的东西 */
     document.body.style.userSelect = 'none'
     // 重新调整大小
-    const type = e.srcElement?.dataset?.point
+    
+    const type = (e.srcElement as any)?.dataset?.point
     if (this.state.showPoint && type) {
       this.zoomType = type
       this.drawStatus = true
@@ -173,7 +169,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
     }
     if (e.buttons === 1) {
       stopFollow(e)
-      const node = this.ref.current as IRef
+      const node = this.ref.current
       let { x, y } = getControlPosition(e, node.offsetParent)
       const { clientWidth, clientHeight } = this.getOffsetParent(node.offsetParent)
 
@@ -309,17 +305,10 @@ export default class DragFrame extends React.Component<IProps, IState> {
     stopFollow(e)
 
     const node: any = this.ref.current
-    // const { x, y } = getControlPosition(e, node.offsetParent)
-    // const { clientWidth, clientHeight } = this.getOffsetParent(node.offsetParent)
 
     if (this.props.zoomAble) {
       this.setState({ showPoint: true })
     }
-
-    // const p = {
-    //   x: (x / clientWidth) * 100,
-    //   y: (y / clientHeight) * 100,
-    // }
     const { startP, endP } = this.state
     const { start, end } = this.relateOffsetPosition
     if (
