@@ -6,3 +6,25 @@
   border: 2px solid #000;
   font-size: 2em;
 }
+
+
+.matrix {
+  border: 2px solid rgba(24, 144, 255, 1);
+  position: relative;
+  z-index: 98;
+  background-color: rgba(0, 0, 0, .2);
+}
+
+.point {
+  position: absolute;
+  background-color: red;
+  width: 4px;
+  height: 4px;
+  z-index: 100;
+}
+
+.resizeBorder {
+  position: absolute;
+  background-color: #1890ff;
+  z-index: 99;
+}
