@@ -52,7 +52,7 @@ export const cloneBounds = (bounds: Bounds): Bounds => {
 
 export const getControlPosition = (
   e: MouseEvent,
-  node: HTMLElement,
+  node: any,
   offsetNode?: HTMLElement,
 ): ControlPosition => {
   const offsetParent = (offsetNode || node.offsetParent as HTMLElement) || node.ownerDocument.body
@@ -66,7 +66,7 @@ interface IEvt {
 }
 export function offsetXYFromParent(
   evt: IEvt,
-  offsetParent: HTMLElement,
+  offsetParent: any,
 ): ControlPosition {
 
   const isBody = offsetParent === offsetParent.ownerDocument.body
@@ -137,7 +137,7 @@ export const getBoundPosition = (draggable: any, e: MouseEvent) => {
   }
 }
 
-function findDOMNode(draggable: any): Element {
+function findDOMNode(draggable: any): any {
   const node = ReactDOM.findDOMNode(draggable)
   if (!node) {
     throw new Error('<DraggableCore>: Unmounted during event!')

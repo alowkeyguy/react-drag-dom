@@ -81,7 +81,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
   }
 
   getOffsetParent = (node: HTMLElement) => {
-    return this.props.offsetParent || (node?.offsetParent as HTMLElement)
+    return this.props.offsetParent || (node.offsetParent as HTMLElement)
   }
 
   reset = () => {
@@ -126,7 +126,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
     document.body.style.userSelect = 'none'
     // 重新调整大小
     
-    const type = (e.srcElement as any)?.dataset?.point
+    const type = (e.srcElement as any).dataset.point
     if (this.state.showPoint && type) {
       this.zoomType = type
       this.drawStatus = true
@@ -137,7 +137,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
     if (offsetP !== e.srcElement) {
       return
     } else if (isNum(startP.x)) {
-      this.props.onCancel?.(e, startP, endP)
+      this.props.onCancel && this.props.onCancel(e, startP, endP);
       this.reset()
       return
     }
@@ -160,10 +160,11 @@ export default class DragFrame extends React.Component<IProps, IState> {
       end: { x, y },
       start: { x, y },
     }
-    this.props.onDrawStart?.(e, { ...p })
+    this.props.onDrawStart && this.props.onDrawStart(e, { ...p });
   }
   draw: EventHandler<MouseEvent> = (e) => {
-    const { startP, endP } = this.state
+    const { startP, endP, showPoint } = this.state;
+    const { bounds, triggerBounds, onDraw } = this.props;
     if (!this.drawStatus || !isNum(startP.x)) {
       return
     }
@@ -174,20 +175,20 @@ export default class DragFrame extends React.Component<IProps, IState> {
       const { clientWidth, clientHeight } = this.getOffsetParent(node.offsetParent)
 
       // 边界
-      if (this.props.bounds) {
+      if (bounds) {
         const { left, top, right, bottom } = getBoundPosition(this, e)
 
         if (left || right) {
           const point = boundLeftRight(startP, endP, this.zoomType)
           const ox = left ? BOUNDS_MOVE_CELL : -BOUNDS_MOVE_CELL
           x = point.x * clientWidth / 100
-          this.props.triggerBounds?.({ x: ox, y: 0 })
+          triggerBounds && triggerBounds({ x: ox, y: 0 });
         }
         if (top || bottom) {
           const point = boundsTopBottom(startP, endP, this.zoomType)
           const oy = top ? BOUNDS_MOVE_CELL : -BOUNDS_MOVE_CELL
           y = point.y * clientHeight / 100
-          this.props.triggerBounds?.({ x: 0, y: oy })
+          triggerBounds && triggerBounds({ x: 0, y: oy });
         }
       }
 
@@ -198,8 +199,8 @@ export default class DragFrame extends React.Component<IProps, IState> {
 
       let [start, end] = [{ x: 0, y: 0 }, { x: 0, y: 0 }]
       // 框调整大小
-      if (this.state.showPoint && this.zoomType) {
-        [start, end] = this[this.zoomType]?.call(this, p)
+      if (showPoint && this.zoomType) {
+        [start, end] = this[this.zoomType].call(this, p)
       } else {
         [start, end] = this.bottomRight(p)
       }
@@ -214,15 +215,10 @@ export default class DragFrame extends React.Component<IProps, IState> {
           y: end.y * clientHeight / 100,
         },
       }
-      this.props.onDraw?.(
-        e,
-        start,
-        end,
-        {
-          ...this.relateOffsetPosition,
-          node,
-        },
-      )
+      onDraw && onDraw(e, start, end, {
+        ...this.relateOffsetPosition,
+        node
+      });
     }
   }
 
@@ -315,16 +311,16 @@ export default class DragFrame extends React.Component<IProps, IState> {
       Math.abs(start.x - end.x) > MIN_SPACE
       || Math.abs(start.y - end.y) > MIN_SPACE
     ) {
-      this.props.onDrawStop?.(
+      this.props.onDrawStop && this.props.onDrawStop(
         e,
         startP,
         endP,
         {
           ...this.relateOffsetPosition,
-          node,
+          node
         },
-        () => this.reset(),
-      )
+        () => this.reset()
+      );
     } else {
       this.reset()
     }
@@ -342,17 +338,12 @@ export default class DragFrame extends React.Component<IProps, IState> {
       Math.abs(startP.x - end.x) > MIN_SPACE
       || Math.abs(start.y - end.y) > MIN_SPACE
     ) {
-      this.props.onCancel?.(null, startP, endP)
+      this.props.onCancel && this.props.onCancel(null, startP, endP)
     }
   }
 
-
-  onMouseDown: EventHandler<HTMLElement> = (e) => { }
-
-  onMouseMove: EventHandler<HTMLElement> = (e) => { }
-
-  onMouseUp = (e: MouseEvent, et: any, cb: () => void) => {
-    const { clientWidth, clientHeight } = et.node?.offsetParent
+  onMouseUp = (_e: MouseEvent, et: any, cb: () => void) => {
+    const { clientWidth, clientHeight } = et.node.offsetParent
     this.setState((state) => ({
       startP: {
         x: (et.ox / clientWidth) * 100 + state.startP.x,
@@ -373,7 +364,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
         onStop={this.onMouseUp}
         onDrag={stop}
         bounds={this.props.bounds}
-        triggerBounds={this.props?.triggerBounds}
+        triggerBounds={this.props.triggerBounds}
       >
         <div
           style={{
@@ -385,7 +376,7 @@ export default class DragFrame extends React.Component<IProps, IState> {
             visibility: isNum(startP.x) ? 'visible' : 'hidden',
           }}
         >
-          {this.props?.children}
+          {this.props.children}
           <div
             ref={this.ref}
             style={{

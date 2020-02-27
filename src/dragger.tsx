@@ -60,13 +60,15 @@ export default class Dragger extends React.Component<IProps, IState> {
   }
   componentWillUnmount() {
     const node = this.ref.current
-    removeEvent(node?.ownerDocument, MOUSE_EVT.move, this.handleDrag)
-    removeEvent(node?.ownerDocument, MOUSE_EVT.stop, this.handleDragStop)
+    if (node) {
+      removeEvent(node.ownerDocument, MOUSE_EVT.move, this.handleDrag);
+      removeEvent(node.ownerDocument, MOUSE_EVT.stop, this.handleDragStop);
+    }
   }
 
   handleDrag: EventHandler<MouseEvent> = (e) => {
     if (this.dragging) {
-      const { bounds, offsetParent, onDrag } = this.props
+      const { bounds, offsetParent, onDrag, triggerBounds } = this.props;
       stop(e)
       const node = this.ref.current as HTMLElement
       const position = getControlPosition(e, node, offsetParent)
@@ -78,20 +80,19 @@ export default class Dragger extends React.Component<IProps, IState> {
 
         if (left || right) {
           const ox = left ? BOUNDS_MOVE_CELL : -BOUNDS_MOVE_CELL
-          const { x }  = this.props.triggerBounds?.({ x: ox, y: 0 }) as ControlPosition
+          const { x }  = triggerBounds? triggerBounds({ x: ox, y: 0 }) as ControlPosition : {x: 0}
           coreData.x = coreData.x + x
           coreData.deltaX = coreData.deltaX + x
-          console.log(coreData.deltaX, x)
         }
         if (top || bottom) {
           const oy = top ? BOUNDS_MOVE_CELL : -BOUNDS_MOVE_CELL
-          const { y } = this.props.triggerBounds?.({ x: 0, y: oy }) as ControlPosition
+          const { y } = triggerBounds? triggerBounds({ x: 0, y: oy }) as ControlPosition : {y: 0}
           coreData.y = coreData.y + y
           coreData.deltaY = coreData.deltaY + y
         }
       }
 
-      onDrag?.(e, coreData, () => this.resetP())
+      onDrag && onDrag(e, coreData, () => this.resetP());
 
       this.last = { x: coreData.x, y: coreData.y }
       this.setState({
@@ -120,18 +121,24 @@ export default class Dragger extends React.Component<IProps, IState> {
 
       const uiP = this.state.uiP
       if (uiP.x === 0 && uiP.y === 0) {
-        onClick?.(e)
+        onClick && onClick(e);
         return
       }
 
-      onStop?.(e, { ...coreData, ox: position.x - this.beginP.x, oy: position.y - this.beginP.y }, () =>
-        this.resetP(),
-      )
+      onStop && onStop(
+        e,
+        {
+          ...coreData,
+          ox: position.x - this.beginP.x,
+          oy: position.y - this.beginP.y
+        },
+        () => this.resetP()
+      );
 
 
       if (node) {
-        removeEvent(node.ownerDocument, MOUSE_EVT.move, this.handleDrag)
-        removeEvent(node.ownerDocument, MOUSE_EVT.stop, this.handleDragStop)
+        removeEvent(node.ownerDocument, MOUSE_EVT.move, this.handleDrag);
+        removeEvent(node.ownerDocument, MOUSE_EVT.stop, this.handleDragStop);
       }
     }
   }
@@ -157,11 +164,7 @@ export default class Dragger extends React.Component<IProps, IState> {
 
     const coreData = createCoreData(node, this.last, { x, y })
 
-    const shouldUpdate = onStart?.(e, coreData)
-
-    if (shouldUpdate === false) {
-      return
-    }
+    onStart && onStart(e, coreData);
 
     this.last = { x, y }
     this.dragging = true
