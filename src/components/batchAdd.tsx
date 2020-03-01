@@ -40,7 +40,8 @@ interface IState {
 
 class BatchAdd extends React.Component<IProps, IState> {
   state = {
-    pArray: [{ x: 0, y: 0, id: "1", offsetX: 0, offsetY: 0 }]
+    pArray: []
+    // { x: 0, y: 0, id: "1", offsetX: 0, offsetY: 0 }
   };
 
   draw = (
@@ -83,9 +84,9 @@ class BatchAdd extends React.Component<IProps, IState> {
     const pArray = this.state.pArray;
     const baseX = position.end.x - position.start.x;
     const baseY = position.end.y - position.start.y;
-    const nArr = pArray.map(item => ({
-      x: item.x + (item.offsetX / baseX) * 100,
-      y: item.y + (item.offsetY / baseY) * 100,
+    const nArr = pArray.map((item: IPArray) => ({
+      x: item.x + ((item.offsetX || 0) / baseX) * 100,
+      y: item.y + ((item.offsetY || 0) / baseY) * 100,
       id: item.id
     }));
     this.setState({
