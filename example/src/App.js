@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { v4 } from 'uuid'
 
-import Dragger, {DragFrame, BatchAdd} from 'react-drag-dom'
+import Dragger, {DragFrame, BatchAdd, BatchMove} from 'react-drag-dom'
 import './index.css'
 const bgImg = require('./img/bg.jpeg')
 
 const [MAX, MIN] = [3, 0.5];
 const POINT_SCALE = 0.2;
+const MOVE_CELl = 4
 const DEFAULT_POINTS = [
   {
     x: 50,
@@ -55,43 +56,6 @@ const Tab = ({type, setType, className}) => {
   );
 }
 
-const resumeOffsetParentPoint = (
-  start,
-  end,
-  arr
-) => {
-  const baseX = end.x - start.x;
-  const baseY = end.y - start.y;
-  return arr.length
-    ? arr.map(item => ({
-        ...item,
-        x: (item.x * baseX) / 100 + start.x,
-        y: (item.y * baseY) / 100 + start.y
-      }))
-    : [];
-};
-
-const getAreasPoint = (start, end, arr) => {
-  const points = [];
-  const valueP = [];
-  arr.forEach((item, i) => {
-    if (
-      start.x < item.x &&
-      item.x < end.x &&
-      start.y < item.y &&
-      item.y < end.y
-    ) {
-      points.push({
-        ...item,
-        x: ((item.x - start.x) * 100) / (end.x - start.x),
-        y: ((item.y - start.y) * 100) / (end.y - start.y)
-      });
-    } else {
-      valueP.push({ ...item });
-    }
-  });
-  return [ points, valueP ];
-};
 
 const Icon = ({point}) => {
   return (
@@ -110,48 +74,7 @@ const Icon = ({point}) => {
   );
 }
 
-const BatchMove = ({points, setPoints, bounds, triggerBounds }) => {
-  const [pArray, setPArray] = useState([]); // 临时矩阵点位
-
-  const drawStop = (e, start, end) => {
-    const [pointsArr, valueP ] = getAreasPoint(start, end, points);
-    setPArray(pointsArr);
-    setPoints(valueP);
-  };
-  const cancel = (_e, start, end) => {
-    setPoints([...points, ...resumeOffsetParentPoint(start, end, pArray)]);
-    setPArray([]);
-  };
-
-  return (
-    <DragFrame
-      bounds={bounds}
-      triggerBounds={({ x, y }) => triggerBounds({ x, y })}
-      onDrawStop={drawStop}
-      onCancel={cancel}
-    >
-      {pArray.map(point => (
-        <Icon key={point.id} point={point} />
-      ))}
-    </DragFrame>
-  );
-};
-
 const content = (arr) => arr.map(point => <Icon key={point.id} point={point} />)
-
-const Add = ({bounds,points, triggerBounds, setPoints}) => {
-
-  return (
-    <BatchAdd
-      xN={3}
-      yN={3}
-      points={points}
-      bounds={bounds}
-      triggerBounds={triggerBounds}
-      setPoints={setPoints}
-      createPointView={content} />
-  )
-}
 
 
 const App = () => {
@@ -317,7 +240,7 @@ const App = () => {
           ))}
           {type === "SELECT" && (
             <DragFrame
-              triggerBounds={({ x, y }) => moveBg({ x: x * 4, y: y * 4 })}
+              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
               bounds={contentRef.current}
               onDrawStop={(_e, start, end, _offsetP, cb) =>
                 batchSelect(start, end, cb)
@@ -326,20 +249,22 @@ const App = () => {
           )}
           {type === "SELECT_MOVE" && (
             <BatchMove
-              triggerBounds={({ x, y }) => moveBg({ x: x * 4, y: y * 4 })}
               bounds={contentRef.current}
               points={points}
               setPoints={setPoints}
+              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
+              createPointView={content}
             />
           )}
           {type === "BATCH_CREATE" && (
-            <Add
-              triggerBounds={({ x, y }) =>
-                moveBg({ x: x * 4, y: y * 4 })
-              }
+            <BatchAdd
+              xN={3}
+              yN={3}
               bounds={contentRef.current}
               points={points}
               setPoints={setPoints}
+              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
+              createPointView={content}
             />
           )}
         </div>
@@ -347,13 +272,5 @@ const App = () => {
     </div>
   );
 };
-// export default class App extends Component {
-//   render () {
-//     return (
-//       <div>
-//         <ExampleComponent text='Modern React component module' />
-//       </div>
-//     )
-//   }
-// }
+
 export default App

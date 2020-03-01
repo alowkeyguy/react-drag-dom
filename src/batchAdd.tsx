@@ -2,6 +2,7 @@ import * as React from 'react'
 import { v4 } from 'uuid'
 import DragFrame from './dragFrame'
 import { createCSSTransform } from "./utils/domFns";
+import { resumeOffsetParentPoint } from "./utils/utils";
 
 interface IPoint extends ControlPosition {
   id: string
@@ -36,23 +37,6 @@ interface IProps {
 interface IState {
   pArray: IPArray[]
 }
-
-
-const resumeOffsetParentPoint = (
-  start: ControlPosition,
-  end: ControlPosition,
-  arr: any[],
-) => {
-  const baseX = end.x - start.x;
-  const baseY = end.y - start.y;
-  return arr.length
-    ? arr.map(item => ({
-        ...item,
-        x: (item.x * baseX) / 100 + start.x,
-        y: (item.y * baseY) / 100 + start.y
-      }))
-    : [];
-};
 
 class BatchAdd extends React.Component<IProps, IState> {
   state = {
@@ -129,7 +113,7 @@ class BatchAdd extends React.Component<IProps, IState> {
         bounds={bounds}
         triggerBounds={triggerBounds}
       >
-        <div>{createPointView ? createPointView(pArray) : null}</div>
+        {createPointView ? createPointView(pArray) : null}
       </DragFrame>
     );
   }

@@ -412,11 +412,6 @@ export default class DragFrame extends React.Component<IProps, IState> {
                 className={styles.point}
               />
               <span
-                data-point="bottomRight"
-                style={{ bottom: '0', right: '0', cursor: 'nwse-resize' }}
-                className={styles.point}
-              />
-              <span
                 data-point="top"
                 style={{
                   height: '2px',
