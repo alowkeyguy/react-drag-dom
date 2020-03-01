@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { v4 } from 'uuid'
-import DragFrame from './dragFrame'
-import { createCSSTransform } from "./utils/domFns";
-import { resumeOffsetParentPoint } from "./utils/utils";
+import DragFrame from '../dragFrame'
+import { createCSSTransform } from "../utils/domFns";
+import { resumeOffsetParentPoint } from "../utils/utils";
 
 interface IPoint extends ControlPosition {
   id: string

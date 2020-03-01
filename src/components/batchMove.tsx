@@ -1,6 +1,6 @@
 import * as React from 'react'
-import DragFrame from './dragFrame'
-import {getAreasPoint, resumeOffsetParentPoint } from "./utils/utils"
+import DragFrame from '../dragFrame'
+import {getAreasPoint, resumeOffsetParentPoint } from "../utils/utils"
 
 
 interface IPoint extends ControlPosition {
