@@ -78,6 +78,9 @@ onDraw | drawing | function | --
 onDrawStop | draw end | function | --
 onCancel | complete select | function | --
 
+## demo
+![demo](./example/src/img/demo.gif)
+
 ## License
 
 MIT © [alowkeyguy](https://github.com/alowkeyguy)
