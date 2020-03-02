@@ -218,7 +218,9 @@ const App = () => {
               onStop={(e, data, cb) => onStop(e, data, point, cb)}
               key={point.id}
               bounds={contentRef.current}
-              triggerBounds={({ x, y }) => moveBg({ x: x * 4, y: y * 4 })}
+              triggerBounds={({ x, y }) =>
+                moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })
+              }
             >
               <div
                 style={{
@@ -240,7 +242,9 @@ const App = () => {
           ))}
           {type === "SELECT" && (
             <DragFrame
-              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
+              triggerBounds={({ x, y }) =>
+                moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })
+              }
               bounds={contentRef.current}
               onDrawStop={(_e, start, end, _offsetP, cb) =>
                 batchSelect(start, end, cb)
@@ -252,7 +256,9 @@ const App = () => {
               bounds={contentRef.current}
               points={points}
               setPoints={setPoints}
-              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
+              triggerBounds={({ x, y }) =>
+                moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })
+              }
               createPointView={content}
             />
           )}
@@ -263,7 +269,9 @@ const App = () => {
               bounds={contentRef.current}
               points={points}
               setPoints={setPoints}
-              triggerBounds={({ x, y }) => moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })}
+              triggerBounds={({ x, y }) =>
+                moveBg({ x: x * MOVE_CELl, y: y * MOVE_CELl })
+              }
               createPointView={content}
             />
           )}

@@ -18,7 +18,6 @@ const MOUSE_EVT = {
 
 interface IProps {
   children: React.ReactElement
-  defaultPosition?: ControlPosition
   disabled?: boolean
   bounds?: HTMLElement
   triggerBounds?: (p: ControlPosition) => ControlPosition | void
