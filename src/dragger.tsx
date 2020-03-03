@@ -23,8 +23,8 @@ interface IProps {
   triggerBounds?: (p: ControlPosition) => ControlPosition | void
   offsetParent?: HTMLElement
   onStart?: (e: MouseEvent, data: DraggableData) => void | boolean
-  onDrag?: (e: MouseEvent, data: DraggableData, cb: () => void) => void | boolean
-  onStop?: (e: MouseEvent, data: DraggableData, cb: () => void) => void
+  onDrag?: (e: MouseEvent, data: DraggableData, resetTransfer: () => void) => void | boolean
+  onStop?: (e: MouseEvent, data: DraggableData, resetTransfer: () => void) => void
   onClick?: (e: MouseEvent) => void
 }
 interface IState {

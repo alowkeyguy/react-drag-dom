@@ -14,45 +14,7 @@ npm install --save react-drag-dom
 ```
 
 ## Usage
-
-```tsx
-import * as React from 'react'
-
-import Dragger, { DragFrame } from 'react-drag-dom'
-
-const Example = () => {
-  
-  const onStop = (e, data, cb) => {
-    console.log(e, data)
-  }
-  const batchSelect = (e, start, end, offsetP, cb) => {}
-
-  return (
-    <div
-      style={{
-        backgroundImage: `url(${bgImg})`,
-        position: 'relative',
-      }}>
-      <Dragger
-        onStop={onStop}
-      >
-        <div
-          style={{
-            position: "absolute",
-            left: point.x + "%",
-            top: point.y + "%",
-            width: "1px",
-            height: "1px"
-          }}
-        >
-          <Icon />
-        </div>
-      </Dragger>
-      {show && <DragFrame onDrawStop={batchSelect}>}
-    </div>
-  )
-}
-```
+[demon](./example/src/App.js)
 
 ## Dragger
 Property | Description | 	Type | Default

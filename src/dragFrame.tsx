@@ -31,7 +31,7 @@ interface IProps {
   triggerBounds?: (p: ControlPosition) => ControlPosition | void
   onDrawStart?: (e: any, start: ControlPosition) => void
   onDraw?: (e: any, start: ControlPosition, end: ControlPosition, offsetPosition: any) => void
-  onDrawStop?: (e: any, start: ControlPosition, end: ControlPosition, offsetPosition?: any, cb?: () => void) => void
+  onDrawStop?: (e: any, start: ControlPosition, end: ControlPosition, offsetPosition?: any, resetTransfer?: () => void) => void
   onCancel?: (e: any, start: ControlPosition, end: ControlPosition) => void
 }
 interface IState {
