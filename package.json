@@ -1,5 +1,5 @@
 {
-  "name": "react-drag-dom",
+  "name": "@tuya-fe/react-drag-dom",
   "version": "1.0.0",
   "description": "React draggable component",
   "author": "alowkeyguy",
