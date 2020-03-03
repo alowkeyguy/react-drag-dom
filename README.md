@@ -14,7 +14,7 @@ npm install --save @tuya-fe/react-drag-dom
 ```
 
 ## Usage
-[demon](./example/src/App.js)
+[demo](./example/src/App.js)
 
 ## Dragger
 Property | Description | 	Type | Default
