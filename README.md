@@ -10,7 +10,7 @@ When you are asked to set a point on a scalable graph, ues it. in this component
 ## Install
 
 ```bash
-npm install --save react-drag-dom
+npm install --save @tuya-fe/react-drag-dom
 ```
 
 ## Usage
