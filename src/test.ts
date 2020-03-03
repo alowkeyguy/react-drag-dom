@@ -1,7 +1,14 @@
-import ExampleComponent from './'
+import Dragger, {DragFrame} from './index'
 
-describe('ExampleComponent', () => {
+
+describe('Dragger', () => {
   it('is truthy', () => {
-    expect(ExampleComponent).toBeTruthy()
+    expect(Dragger).toBeTruthy()
+  })
+})
+
+describe('DragFrame', () => {
+  it('is truthy', () => {
+    expect(DragFrame).toBeTruthy()
   })
 })
