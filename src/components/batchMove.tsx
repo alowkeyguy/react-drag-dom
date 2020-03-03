@@ -3,9 +3,6 @@ import DragFrame from '../dragFrame'
 import {getAreasPoint, resumeOffsetParentPoint } from "../utils/utils"
 
 
-interface IPoint extends ControlPosition {
-  id: string
-}
 interface IProps {
   bounds?: HTMLElement
   points: IPoint[]

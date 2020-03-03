@@ -4,20 +4,13 @@ import DragFrame from '../dragFrame'
 import { createCSSTransform } from "../utils/domFns";
 import { resumeOffsetParentPoint } from "../utils/utils";
 
-interface IPoint extends ControlPosition {
-  id: string
-}
-
 interface IPosition {
   start: ControlPosition
   end: ControlPosition
   node: HTMLElement
 }
 
-interface IPArray {
-  x: number
-  y: number
-  id: string
+interface IPArray extends IPoint {
   style?: string
   offsetX?: number
   offsetY?: number
@@ -26,12 +19,13 @@ interface IPArray {
 interface IProps {
   xN: number
   yN: number
-  points: IPoint[]
+  points?: IPoint[]
   setPoints: (points: IPoint[]) => void
   bounds?: HTMLElement
   triggerBounds?: (p: ControlPosition) => ControlPosition
   createPointView?: (points: IPoint[]) => HTMLElement
   pointBaseInfo?: any
+  id?: string
 }
 
 interface IState {
@@ -41,8 +35,12 @@ interface IState {
 class BatchAdd extends React.Component<IProps, IState> {
   state = {
     pArray: []
-    // { x: 0, y: 0, id: "1", offsetX: 0, offsetY: 0 }
   };
+
+  static defaultProps = {
+    id: 'id',
+    points: []
+  }
 
   draw = (
     _e: HTMLElement,
@@ -50,7 +48,7 @@ class BatchAdd extends React.Component<IProps, IState> {
     _endP: ControlPosition,
     position: IPosition
   ) => {
-    const { xN, yN, pointBaseInfo } = this.props;
+    const { xN, yN, id = 'id' } = this.props;
     const { start, end } = position;
     const xCell = ((end.x - start.x) * (xN - 1)) / ((xN - 1) * (xN - 1) || 1);
     const yCell = ((end.y - start.y) * (yN - 1)) / ((yN - 1) * (yN - 1) || 1);
@@ -59,10 +57,9 @@ class BatchAdd extends React.Component<IProps, IState> {
       const ox = xCell * (i % xN);
       const oy = (yCell * (i - (i % xN))) / xN;
       return {
-        ...pointBaseInfo,
         x: 0,
         y: 0,
-        id: v4(),
+        [id]: v4(),
         style: createCSSTransform({
           x: ox,
           y: oy
@@ -82,12 +79,14 @@ class BatchAdd extends React.Component<IProps, IState> {
     position: IPosition
   ) => {
     const pArray = this.state.pArray;
+    const { id = 'id', pointBaseInfo } = this.props
     const baseX = position.end.x - position.start.x;
     const baseY = position.end.y - position.start.y;
     const nArr = pArray.map((item: IPArray) => ({
+      ...pointBaseInfo,
       x: item.x + ((item.offsetX || 0) / baseX) * 100,
       y: item.y + ((item.offsetY || 0) / baseY) * 100,
-      id: item.id
+      [id]: item[id]
     }));
     this.setState({
       pArray: nArr
@@ -95,7 +94,7 @@ class BatchAdd extends React.Component<IProps, IState> {
   };
 
   cancel = (_e: HTMLElement, start: ControlPosition, end: ControlPosition) => {
-    const { setPoints, points } = this.props;
+    const { setPoints, points = [] } = this.props;
     setPoints([
       ...points,
       ...resumeOffsetParentPoint(start, end, this.state.pArray)

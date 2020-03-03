@@ -43,6 +43,9 @@ interface PositionOffsetControlPosition {
   x: number | string
   y: number | string
 }
+interface IPoint extends ControlPosition {
+  [propName: string]: any;
+}
 
 interface DraggableCoreState {
   allowAnyClick: boolean
