@@ -134,12 +134,12 @@ export default class DragFrame extends React.Component<IProps, IState> {
       return
     }
     // 点击自身
-    if (offsetP !== e.srcElement) {
-      return
+    if (ref.offsetParent.contains(e.srcElement as Node)) {
+      return;
     } else if (isNum(startP.x)) {
       this.props.onCancel && this.props.onCancel(e, startP, endP);
-      this.reset()
-      return
+      this.reset();
+      return;
     }
 
     stopFollow(e)
@@ -332,14 +332,6 @@ export default class DragFrame extends React.Component<IProps, IState> {
 
   componentWillUnmount() {
     this.removeListener()
-    const { start, end } = this.relateOffsetPosition
-    const { startP, endP } = this.state
-    if (
-      Math.abs(startP.x - end.x) > MIN_SPACE
-      || Math.abs(start.y - end.y) > MIN_SPACE
-    ) {
-      this.props.onCancel && this.props.onCancel(null, startP, endP)
-    }
   }
 
   onMouseUp = (_e: MouseEvent, et: any, cb: () => void) => {
