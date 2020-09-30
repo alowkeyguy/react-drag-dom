@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { v4 } from 'uuid'
 
-import Dragger, {DragFrame, BatchAdd, BatchMove} from '@tuya-fe/react-drag-dom'
+import Dragger, {DragFrame, BatchAdd, BatchMove} from 'react-drag-dom'
 import './index.css'
 const bgImg = require('./img/bg.jpeg')
 
